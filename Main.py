@@ -1,3 +1,7 @@
+# Code for our small team effort in Google Hash 2018 (no link as links o competition are sure to expire, but.. Google IT)
+
+
+#Input file formats
 
 #● a – the row of the start intersection (0 ≤ a < R)
 #● b – the column of the start intersection (0 ≤ b < C)
@@ -7,7 +11,7 @@
 #● f – the latest finish (0 ≤ f ≤ T) , (f ≥ s + |x − a| + |y − b|)
 #○ note that f can be equal to T – this makes the latest finish equal to the end of the simulation
 
-
+#First line of input file
 #● R – number of rows of the grid (1 ≤ R ≤ 10000)
 #● C – number of columns of the grid (1 ≤ C ≤ 10000)
 #● F – number of vehicles in the fleet (1 ≤ F ≤ 1000)
@@ -21,16 +25,21 @@ import os
 
 
 def CalcDistance(x,a,y,b):
+    #Calc distance between two points
     distance = abs(x-a) + abs(y-b)
     return distance
 
 
 def calcVehToRideStart(vh,r):
+    #Helper function for dist calc using vehicle and ride class
     dist = CalcDistance(vh.x,vh.y,r.a,r.b)
     return dist
 
 
 class simulation:
+
+    # Class to store the current simulation properties
+
     def __init__(self,rows,cols,vehicles,rides,bonus,steps):
         self.rows = rows
         self.cols = cols
@@ -41,6 +50,9 @@ class simulation:
 
 
 class vehicle:
+
+    # Vehicle class
+
     def __init__(self,n,simul):
         self.x = 0
         self.y = 0
@@ -57,10 +69,12 @@ class vehicle:
 
     def getnextride(self,t,rides,vehicles):
 
-        # Check for assignedRides
+        #Function to look for the next ride
+
+        # Check for assignedRides  --This is not used yet, was part of design to check points for final submission
         if not self.assignedRides:
 
-            # Get rides for which this vehice is a candidate
+            # Get rides for which this vehicle is a candidate
             newRide = ''
             targetRidesCalc = [rc for rc in rides if rc.vehicle == -1 and rc.f > t]
             targetRides = [(tr,arrStartTime(self, tr, t, 9000)) for tr in targetRidesCalc if tr.s > t]
@@ -122,6 +136,7 @@ class vehicle:
                 print('Ride ends after simul')
                 return
 
+            #Start the process of assigning ride to vehicle and vice versa
             newRide.assignVehicle(self)
             self.r = newRide
 
@@ -208,6 +223,7 @@ def CostSimpleLast(vehicle,ride,t):
 
 
 def arrStartTime(vehicle,ride,t,threshold):
+
     # Find ride with intention to get bonus and minimise waiting time
     arrWaitingTime = CostSimple(vehicle,ride,t)
     if arrWaitingTime <0 or arrWaitingTime > threshold:
@@ -281,7 +297,9 @@ def runSimul(filename):
 
 
 def main():
+
     totalpoints = 0
+    
     for filename in os.listdir('.'):
         if filename.endswith(".in"):
             points = runSimul(filename)
